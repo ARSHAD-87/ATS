@@ -25,9 +25,8 @@ SECRET_KEY = 's#zxdfd)8rn7)=_2ly$$g%l9un$9)gk^+^cra5ixn8ias5l&ig'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ats-fxv8.onrender.com',
+ALLOWED_HOSTS = ['0.0.0.0','ats-fxv8.onrender.com',
                  '127.0.0.1']
-
 
 # Application definition
 
