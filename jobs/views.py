@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 from bs4 import BeautifulSoup
+from .models import JobListing
 
-# View function to scrape and display jobs
 def index(request):
-    query = request.GET.get('q', 'python developer')  # Default search: Python Developer
+    query = request.GET.get('q', 'python developer')  # Default search
     location = 'Lucknow%2C+Uttar+Pradesh'
     radius = 25
 
@@ -15,8 +15,8 @@ def index(request):
     }
 
     r = requests.get('https://api.scraperapi.com/', params=payload)
+    job_listings = []
 
-    job_listings = []  # Use a list to store job data
     if r.status_code == 200:
         soup = BeautifulSoup(r.text, "html.parser")
         job_cards = soup.find_all("div", class_="job_seen_beacon")
@@ -24,19 +24,33 @@ def index(request):
         for job_card in job_cards:
             title = job_card.find("h2", class_="jobTitle")
             company = job_card.find("span", class_="css-1h7lukg")
-            location = job_card.find("div", class_="company_location")
+            job_location = job_card.find("div", class_="company_location")
+            salary = job_card.find("div", class_="salary-snippet-container")  # Extract salary
             link = job_card.find("a", class_="jcs-JobTitle")
 
             job_entry = {
                 'title': title.text.strip() if title else 'N/A',
                 'company': company.text.strip() if company else 'N/A',
-                'location': location.text.strip() if location else 'N/A',
+                'location': job_location.text.strip() if job_location else 'N/A',
+                'salary': salary.text.strip() if salary else 'Not disclosed',  # Store salary
                 'link': "https://in.indeed.com" + link['href'] if link else 'N/A'
             }
+
+            # Store in MongoDB (avoid duplicates)
+            if not JobListing.objects.filter(link=job_entry['link']).exists():
+                JobListing.objects.create(**job_entry)
 
             job_listings.append(job_entry)
 
     else:
         print(f"Request failed with status code: {r.status_code}")
 
-    return render(request, 'index.html', {'job_listings': job_listings, 'query': query})
+    # Fetch all stored jobs from MongoDB to display
+    stored_jobs = JobListing.objects.all()
+
+    return render(request, 'index.html', {'job_listings': stored_jobs, 'query': query})
+
+def delete_job(request, job_id):
+    job = JobListing.objects.get(id=job_id)
+    job.delete()
+    return redirect('index')

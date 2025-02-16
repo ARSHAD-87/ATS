@@ -25,7 +25,8 @@ SECRET_KEY = 's#zxdfd)8rn7)=_2ly$$g%l9un$9)gk^+^cra5ixn8ias5l&ig'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ats-fxv8.onrender.com']
+ALLOWED_HOSTS = ['ats-fxv8.onrender.com',
+                 '127.0.0.1']
 
 
 # Application definition
@@ -77,10 +78,17 @@ WSGI_APPLICATION = 'job_scraper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'ENGINE': 'djongo',
+        'NAME': 'job_listings',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': "mongodb+srv://10arshad20:a0jK4GSH70N1YTJ6@cluster0.mcp8r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+            'username': '10arshad20',
+            'password': 'a0jK4GSH70N1YTJ6',
+        }
     }
 }
+
 
 
 
