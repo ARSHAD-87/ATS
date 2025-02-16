@@ -3,3 +3,5 @@ gunicorn
 requests
 beautifulsoup4
 numpy
+djongo
+pymongo
