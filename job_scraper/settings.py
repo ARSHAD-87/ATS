@@ -76,13 +76,9 @@ WSGI_APPLICATION = 'job_scraper.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {  # For Django authentication & admin
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "db.sqlite3",
-    },
-    'mongo': {  # For storing job listings
-        'ENGINE': 'djongo',
-        'NAME': 'job_listings',
     }
 }
 
