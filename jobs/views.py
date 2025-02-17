@@ -9,7 +9,7 @@ import requests
 from bs4 import BeautifulSoup
 from .models import JobListing
 import random
-from .utils import calculate_average_salary  # Import the new function
+from .utils import calculate_average_salary  
 
 def index(request):
     query = request.GET.get('q', 'python developer')  # Default search
@@ -33,7 +33,7 @@ def index(request):
             title = job_card.find("h2", class_="jobTitle")
             company = job_card.find("span", class_="css-1h7lukg")
             job_location = job_card.find("div", class_="company_location")
-            salary = f"₹{random.randint(15, 40) * 1000} per month"  # Ensuring salary is a multiple of 1000
+            salary = f"₹{random.randint(15, 40) * 1000} per month" 
             link = job_card.find("a", class_="jcs-JobTitle")
 
             job_entry = {
@@ -62,7 +62,7 @@ def index(request):
     return render(request, 'index.html', {
         'job_listings': stored_jobs,
         'query': query,
-        'average_salary': f"₹{average_salary} per month"  # Format the salary
+        'average_salary': f"₹{average_salary} per month"  
     })
 
 

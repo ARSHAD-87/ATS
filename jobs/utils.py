@@ -10,5 +10,5 @@ def calculate_average_salary(job_listings):
     salaries = [extract_salary(job.salary) for job in job_listings if extract_salary(job.salary) is not None]
     
     if salaries:
-        return sum(salaries) // len(salaries)  # Ensure integer division for clean formatting
-    return 0  # Default if no salaries found
+        return sum(salaries) // len(salaries) 
+    return 0  
