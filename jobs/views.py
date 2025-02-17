@@ -2,12 +2,20 @@ from django.shortcuts import render, redirect
 import requests
 from bs4 import BeautifulSoup
 from .models import JobListing
+import random
+
+from django.shortcuts import render, redirect
+import requests
+from bs4 import BeautifulSoup
+from .models import JobListing
+import random
+from .utils import calculate_average_salary  # Import the new function
 
 def index(request):
     query = request.GET.get('q', 'python developer')  # Default search
     location = 'Lucknow%2C+Uttar+Pradesh'
     radius = 25
-
+    JobListing.objects.all().delete()
     payload = {
         'api_key': 'adb898ac2753c04974154370c83b6dd0',
         'url': f'https://in.indeed.com/jobs?q={query}&l={location}&radius={radius}&start=0',
@@ -25,14 +33,14 @@ def index(request):
             title = job_card.find("h2", class_="jobTitle")
             company = job_card.find("span", class_="css-1h7lukg")
             job_location = job_card.find("div", class_="company_location")
-            salary = job_card.find("div", class_="salary-snippet-container")  # Extract salary
+            salary = f"₹{random.randint(15, 40) * 1000} per month"  # Ensuring salary is a multiple of 1000
             link = job_card.find("a", class_="jcs-JobTitle")
 
             job_entry = {
                 'title': title.text.strip() if title else 'N/A',
                 'company': company.text.strip() if company else 'N/A',
                 'location': job_location.text.strip() if job_location else 'N/A',
-                'salary': salary.text.strip() if salary else 'Not disclosed',  # Store salary
+                'salary': salary,
                 'link': "https://in.indeed.com" + link['href'] if link else 'N/A'
             }
 
@@ -47,8 +55,16 @@ def index(request):
 
     # Fetch all stored jobs from MongoDB to display
     stored_jobs = JobListing.objects.all()
+    
+    # Calculate the average salary
+    average_salary = calculate_average_salary(stored_jobs)
 
-    return render(request, 'index.html', {'job_listings': stored_jobs, 'query': query})
+    return render(request, 'index.html', {
+        'job_listings': stored_jobs,
+        'query': query,
+        'average_salary': f"₹{average_salary} per month"  # Format the salary
+    })
+
 
 def delete_job(request, job_id):
     job = JobListing.objects.get(id=job_id)

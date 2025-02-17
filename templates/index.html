@@ -26,6 +26,13 @@
         <input type="text" name="q" value="{{ query }}" placeholder="Search job title">
         <button type="submit">Search</button>
     </form>
+    
+    
+    <!-- Display Average Salary -->
+    {% if job_listings %}
+        <h3>Average Salary: {{ average_salary }}</h3>
+    {% endif %}
+    
 
     <table>
         <tr>
@@ -56,5 +63,8 @@
         </tr>
         {% endfor %}
     </table>
+    <br>
+    <p><B>NOTE:</B><br>
+        <ul><li> Salaries are randomly generated.</li><li>Unable to scrape Salary</li></ul>
 </body>
 </html>
