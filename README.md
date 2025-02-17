@@ -18,7 +18,6 @@ A Django-based web application that scrapes job listings for "Python Developer" 
 - **Backend**: Django (Python)  
 - **Database**: MongoDB  
 - **Web Scraping**: BeautifulSoup, ScraperAPI  
-- **Deployment**: (Optional: AWS, Heroku, Render)  
 
 ---
 
