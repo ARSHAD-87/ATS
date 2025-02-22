@@ -3,12 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 from .models import JobListing
 import random
-
-from django.shortcuts import render, redirect
-import requests
-from bs4 import BeautifulSoup
-from .models import JobListing
-import random
 from .utils import calculate_average_salary  
 
 def index(request):
